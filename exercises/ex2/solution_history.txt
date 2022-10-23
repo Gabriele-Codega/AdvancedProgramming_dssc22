@@ -1,0 +1,27 @@
+Coefficients are: Solutions are: x1 = -1+(1.41421)i
+x2 = -1+(-1.41421)i
+------------------------------
+Coefficients are: a = 1b = 2c = 3Solutions are: x1 = -1+(1.41421)i
+x2 = -1+(-1.41421)i
+------------------------------
+Coefficients are: a = 2b = 3c = 1Solutions are: x1 = -0.5+(0)i
+x2 = -1+(0)i
+------------------------------
+Coefficients are: a = 2b = 3c = 1
+Solutions are: x1 = -0.5+(0)i
+x2 = -1+(0)i
+------------------------------
+Coefficients are: a = 5b = 2c = 4
+Solutions are: x1 = -0.2+(0.87178)i
+x2 = -0.2+(-0.87178)i
+------------------------------
+Coefficients are: a = 5b = 2c = 4
+Solutions are: 
+x1 = -0.2+(0.87178)i
+x2 = -0.2+(-0.87178)i
+------------------------------
+Coefficients are: a = 12b = 5c = 3
+Solutions are: 
+x1 = -0.208333+(0.45453)i
+x2 = -0.208333+(-0.45453)i
+------------------------------
