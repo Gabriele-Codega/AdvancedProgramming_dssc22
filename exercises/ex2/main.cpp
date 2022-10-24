@@ -5,7 +5,7 @@
 
 
 int main(){
-  CQuadratic_Equation eq;
+  CQuadratic_Equation<double> eq;
   std::string inputfile("coords.txt");
   std::string outfile("solution_history.txt");
   eq.get_coefficients(inputfile);
