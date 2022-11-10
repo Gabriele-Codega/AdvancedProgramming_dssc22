@@ -3,18 +3,19 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 template <typename T>
 class Cmatrix{
-  std::vector<T> elems;
-  unsigned int N; //number of rows
-  unsigned int M; //number of columns
+  std::unique_ptr<T[]> elems;
+  int NROWS; //number of rows
+  int NCOLS; //number of columns
 
 public:
   Cmatrix(unsigned int N, unsigned int M);
 
   //assignment operator
-  void operator=(const Cmatrix<T> B);
+  Cmatrix<T>& operator=(const Cmatrix<T>& B);
 
 
   //read and print from/to file
@@ -30,25 +31,44 @@ public:
 //====================
 //==== Functions =====
 
-///CHECK INDICES !!
 
+//constructor
 template <typename T>
 Cmatrix<T>::Cmatrix(unsigned int n, unsigned int m){
-  N = n;
-  M = m;
-  elems.resize(N*M,0); //allocate memory and initialise matrix to zero
+  NROWS = n;
+  NCOLS = m;
+  elems=(new T[NROWS*NCOLS]); //allocate memory and initialise matrix to zero
+  int size = NROWS*NCOLS;
+  for(int i=0;i<size;i++){
+    elems[i]=0;
+  }
+  std::cout<<"Constructor called"<<std::endl;
 }
 
 
 //assignment
 template <typename T>
-void Cmatrix<T>::operator=(const Cmatrix<T> B){
-  for(int i=0;i<N;i++){
-    int row = i*M;
-    for(int j=0;j<M;j++){
-      elems[row+j] = B.elems[row+j];
+Cmatrix<T>& Cmatrix<T>::operator=(const Cmatrix<T>& B){
+  if(this != &B){
+    NROWS = B.NROWS;
+    NCOLS = B.NCOLS;
+    int size = NROWS*NCOLS;
+
+    if (elems != nullptr){
+      delete[] elems;
+      elems = nullptr;
+    }
+
+    if (B.elems == nullptr) {
+      elems = nullptr;
+    } else {
+      elems(new T[size]);
+      for(int i=0;i<size;i++){
+        elems[i] = B.elems[i];
+      }
     }
   }
+  return *this;
 }
 
 
@@ -59,9 +79,9 @@ void Cmatrix<T>::read_from_file(std::string fname){
   if(!infile){
     std::cout<<"Couldn't find file "<<fname<<std::endl;
   } else {
-    for(int i = 0; i<N;i++){
-      int row = i*M;
-      for(int j = 0; j<M;j++){
+    for(int i = 0; i<NROWS;i++){
+      int row = i*NCOLS;
+      for(int j = 0; j<NCOLS;j++){
         infile >> elems[row+j];
       }
     }
@@ -77,11 +97,11 @@ void Cmatrix<T>::print_to_file(std::string fname){
   if(!outfile){
     std::cout<<"Oops, couldn't open file"<<fname<<std::endl;
   } else {
-    for(int i = 0; i<N;i++){
-      int row = i*M;
-      for(int j = 0; j<M;j++){
+    for(int i = 0; i<NROWS;i++){
+      int row = i*NCOLS;
+      for(int j = 0; j<NCOLS;j++){
         outfile << elems[row+j]<<" ";
-        if(j==M-1){
+        if(j==NCOLS-1){
           outfile<<std::endl;
         }
       }
@@ -94,16 +114,19 @@ void Cmatrix<T>::print_to_file(std::string fname){
 //non-optimized multiplication
 template <typename T>
 Cmatrix<T> Cmatrix<T>::operator*(const Cmatrix<T>& B){
-  Cmatrix<T> C(N,B.M);
-  for(int i=0;i<N;i++){
-    int row = i* C.M;
-    for(int j=0;j<M;j++){
-      for(int k=0;k<B.N;k++){
-        C.elems[row+j] += elems[row+k] * B.elems[k*B.N+j];
+  Cmatrix<T> result(NROWS,B.NCOLS);
+
+  for(int i=0; i<result.NROWS; i++){
+    int resrow=i*result.NCOLS;
+    int arow=i*NCOLS;
+    for(int j=0; j<result.NCOLS; j++){
+      for(int k=0; k<NCOLS; k++){
+        result.elems[resrow+j] += elems[arow+k]*B.elems[k*B.NCOLS+j];
       }
     }
   }
-  return C;
+  return result;
+
 }
 
 
