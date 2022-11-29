@@ -1,6 +1,4 @@
 #include "matrix.hpp"
-#include <iostream>
-#include <vector>
 
 int main(){
   Cmatrix<int> A(2,3);
