@@ -71,17 +71,18 @@ public:
   int n;
   Vertex<T>* vertices;
 
+// constructor allocates memory
   Polygon(const int& N){
     vertices = new Vertex<double>[N];
     n = N;
   }
 
-
+// function to add a vertex, first argument is the index inside the array
   void addVertex(int i, const Vertex<T>& a){
     vertices[i] = a;
     std::cout<<"called standard"<<std::endl;
   }
-  template<typename... Types>
+  template<typename... Types> //variadic templating to take arbitrary number of vertices
   void addVertex(int i,const Vertex<T>& a, const Types&... args){
     std::cout<<"called variadic"<<std::endl;
     vertices[i] = a;
@@ -89,11 +90,13 @@ public:
     addVertex(i,args...);
   }
 
+//destructor
   ~Polygon(){
     delete[] vertices;
     std::cout<<"polygon destr"<<std::endl;
   };
 
+// perimeter, overridden from shape
   double perimeter() override{
     std::unique_ptr<double[]> distances(new double[n]);
     double perim{0};
@@ -107,6 +110,8 @@ public:
     return perim;
   }
 
+// printing vertices, overridden from shape
+// could be prettier
   void print_vertices() override{
     for(int i=0;i<n;++i){
       std::cout<<vertices[i].x<<","<<vertices[i].y<<"--";
